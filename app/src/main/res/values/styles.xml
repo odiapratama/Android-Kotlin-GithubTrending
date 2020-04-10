@@ -1,0 +1,65 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light" />
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+        <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
+    </style>
+
+    <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownVerticalOffset">8dp</item>
+        <item name="android:dropDownHorizontalOffset">-16dp</item>
+    </style>
+
+    <style name="MyActionButtonStyle" parent="AppTheme.NoActionBar">
+        <item name="android:minWidth">20dip</item>
+        <item name="android:padding">0dip</item>
+    </style>
+
+    <style name="roboto_12_regular_gray">
+        <item name="android:textColor">@color/light_gray</item>
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
+    <style name="roboto_15_medium_gray">
+        <item name="android:textColor">@color/light_gray</item>
+        <item name="android:textSize">15sp</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+
+    <style name="roboto_15_regular_thin_gray">
+        <item name="android:textColor">@color/thin_gray</item>
+        <item name="android:textSize">15sp</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
+    <style name="roboto_15_medium_green">
+        <item name="android:textColor">@color/green</item>
+        <item name="android:textSize">15sp</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+
+    <style name="roboto_18_bold_dark_gray">
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textSize">18sp</item>
+        <item name="fontFamily">@font/roboto_bold</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
+    <style name="roboto_21_medium_dark_gray">
+        <item name="android:textColor">@color/light_black</item>
+        <item name="android:textSize">21sp</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+
+</resources>

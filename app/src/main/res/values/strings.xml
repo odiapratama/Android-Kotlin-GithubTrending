@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Github Trending</string>
+    <string name="trending">Trending</string>
+    <string name="error_connection1">Something went wrong..</string>
+    <string name="error_connection2">An alien probably blocking your signal.</string>
+    <string name="attention">Attention</string>
+    <string name="ok">OK</string>
+    <string name="data_cache_invalid">Data from cache has expired, Application will refresh the data from repository automatically. \nPlease check your internet connection!</string>
+    <string name="retry">RETRY</string>
+    <string name="sort_by_stars">Sort by stars</string>
+    <string name="sort_by_name">Sort by name</string>
+    <string name="pingfang_font_path">fonts/pingfang_sc_regular.ttf</string>
+</resources>
