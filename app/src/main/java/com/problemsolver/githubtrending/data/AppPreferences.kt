@@ -8,10 +8,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
-class TrendingDatabase(context: Context) {
+class AppPreferences(context: Context) {
 
     private val privateMode = 0
-    private val prefName = "TrendingDatabase"
+    private val prefName = "AppPreferences"
     private val trendingList = "TrendingList"
     private val fetchTime = "FetchTime"
     private val pref: SharedPreferences? = context.getSharedPreferences(prefName, privateMode)

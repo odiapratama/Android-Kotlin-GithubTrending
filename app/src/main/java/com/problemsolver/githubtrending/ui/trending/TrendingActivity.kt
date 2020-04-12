@@ -1,37 +1,31 @@
 package com.problemsolver.githubtrending.ui.trending
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.problemsolver.githubtrending.R
-import com.problemsolver.githubtrending.data.TrendingDatabase
 import com.problemsolver.githubtrending.databinding.ActivityTrendingBinding
 import com.problemsolver.githubtrending.services.TrendingRepository
 import com.problemsolver.githubtrending.utils.DateUtils.Companion.DATE_TIME_PATTERN
 import com.problemsolver.githubtrending.utils.DateUtils.Companion.LOCALE_ENGLISH
 import com.problemsolver.githubtrending.utils.isInternetAvailable
-import com.problemsolver.githubtrending.utils.setDataValidUntil
 import com.problemsolver.githubtrending.utils.stringToDate
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.security.ProviderInstaller
+import com.problemsolver.githubtrending.base.DataBindingActivity
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class TrendingActivity : AppCompatActivity() {
+class TrendingActivity : DataBindingActivity() {
 
     private val trendingViewModel by viewModel<TrendingViewModel>()
-    private val binding by lazy {
-        DataBindingUtil.setContentView(this, R.layout.activity_trending) as ActivityTrendingBinding
-    }
+    private val binding: ActivityTrendingBinding by binding(R.layout.activity_trending)
     private val trendingAdapter: TrendingAdapter by lazy { TrendingAdapter(emptyList(), this) }
-    private val trendingDatabase: TrendingDatabase by lazy { TrendingDatabase(this) }
     private val trendingRepo: TrendingRepository by inject()
     private var validUntil = 0L
     private var now: Long = Date().time
@@ -60,10 +54,12 @@ class TrendingActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.sortByStars -> {
-                trendingAdapter.updateData(trendingDatabase.getTrendingList()?.sortedByDescending { it.stars })
+                trendingAdapter.updateData(
+                    trendingRepo.getCacheTrendingList()?.sortedByDescending { it.stars })
             }
             R.id.sortByName -> {
-                trendingAdapter.updateData(trendingDatabase.getTrendingList()?.sortedBy { it.name })
+                trendingAdapter.updateData(
+                    trendingRepo.getCacheTrendingList()?.sortedBy { it.name })
             }
         }
         return true
@@ -72,7 +68,7 @@ class TrendingActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         validUntil = stringToDate(
-            trendingDatabase.getFetchTime() ?: "",
+            trendingRepo.getCacheFetchTime() ?: "",
             DATE_TIME_PATTERN,
             LOCALE_ENGLISH
         ).time
@@ -95,7 +91,7 @@ class TrendingActivity : AppCompatActivity() {
 
     private fun initData() {
         validUntil = stringToDate(
-            trendingDatabase.getFetchTime() ?: "",
+            trendingRepo.getCacheFetchTime() ?: "",
             DATE_TIME_PATTERN,
             LOCALE_ENGLISH
         ).time
@@ -107,8 +103,6 @@ class TrendingActivity : AppCompatActivity() {
             showLoading(false)
             if (it) {
                 showNoConnection(false)
-                trendingDatabase.setTrendingList(trendingRepo.listTrending)
-                trendingDatabase.setFetchTime(setDataValidUntil())
                 onResume()
             } else {
                 showNoConnection(true)
@@ -124,8 +118,8 @@ class TrendingActivity : AppCompatActivity() {
                     showLoading(true)
                     trendingViewModel.getTrendingList()
                 }
-                trendingDatabase.getTrendingList() != null -> {
-                    trendingAdapter.updateData(trendingDatabase.getTrendingList())
+                trendingRepo.getCacheFetchTime() != null -> {
+                    trendingAdapter.updateData(trendingRepo.getCacheTrendingList())
                 }
                 else -> {
                     showNoConnection(true)
@@ -143,15 +137,15 @@ class TrendingActivity : AppCompatActivity() {
     private fun loadData() {
         showNoConnection(false)
         if (isInternetAvailable(this)) {
-            if (now <= validUntil && trendingDatabase.getTrendingList() != null) {
-                trendingAdapter.updateData(trendingDatabase.getTrendingList())
+            if (now <= validUntil && trendingRepo.getCacheTrendingList() != null) {
+                trendingAdapter.updateData(trendingRepo.getCacheTrendingList())
             } else {
                 showLoading(true)
                 trendingViewModel.getTrendingList()
             }
         } else {
-            if (now <= validUntil && trendingDatabase.getTrendingList() != null) {
-                trendingAdapter.updateData(trendingDatabase.getTrendingList())
+            if (now <= validUntil && trendingRepo.getCacheTrendingList() != null) {
+                trendingAdapter.updateData(trendingRepo.getCacheTrendingList())
             } else {
                 showNoConnection(true)
             }
@@ -163,11 +157,11 @@ class TrendingActivity : AppCompatActivity() {
             with(binding) {
                 rvTrending.visibility = View.GONE
                 shimmerTrending.visibility = View.VISIBLE
-                shimmerTrending.startShimmerAnimation()
+                shimmerTrending.startShimmer()
             }
         } else {
             with(binding) {
-                shimmerTrending.stopShimmerAnimation()
+                shimmerTrending.startShimmer()
                 shimmerTrending.visibility = View.GONE
                 rvTrending.visibility = View.VISIBLE
             }

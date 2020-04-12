@@ -9,7 +9,7 @@ import org.mockito.Mockito
 
 class TrendingDatabaseTest {
 
-    private lateinit var trendingDatabase: TrendingDatabase
+    private lateinit var trendingDatabase: AppPreferences
 
     private lateinit var trendingList: List<Trending>
 
@@ -17,7 +17,7 @@ class TrendingDatabaseTest {
 
     @Before
     fun setUp() {
-        trendingDatabase = TrendingDatabase(InstrumentationRegistry.getInstrumentation().context)
+        trendingDatabase = AppPreferences(InstrumentationRegistry.getInstrumentation().context)
         trendingList = Mockito.anyList()
     }
 

@@ -1,38 +1,37 @@
 package com.problemsolver.githubtrending.services
 
+import com.problemsolver.githubtrending.data.AppPreferences
 import com.problemsolver.githubtrending.models.Trending
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.problemsolver.githubtrending.utils.setDataValidUntil
+import io.reactivex.Observable
 
-class TrendingRepositoryImpl(private val trendingApi: TrendingApi) : TrendingRepository {
-    private var _listTrending: List<Trending>? = null
-    override val listTrending: List<Trending>?
-        get() = _listTrending
+class TrendingRepositoryImpl(
+    private val trendingApi: TrendingApi,
+    private val appPref: AppPreferences
+) : TrendingRepository {
 
     override fun getTrendingList(
-        listener: TrendingListener<List<Trending>>,
         language: String,
         since: String,
         spoken_language_code: String
-    ) {
-        trendingApi.getTrendingList(language, since, spoken_language_code)
-            .enqueue(object : Callback<List<Trending>> {
-                override fun onFailure(call: Call<List<Trending>>, t: Throwable) {
-                    listener.onFailed(t.message)
-                }
-
-                override fun onResponse(
-                    call: Call<List<Trending>>,
-                    response: Response<List<Trending>>
-                ) {
-                    if (response.isSuccessful) {
-                        _listTrending = response.body()
-                        listener.onSuccess(response.body())
-                    } else {
-                        listener.onFailed(response.message())
-                    }
-                }
-            })
+    ): Observable<List<Trending>> {
+        return trendingApi.getTrendingList(
+            language,
+            since,
+            spoken_language_code
+        ).flatMap {
+            setCacheFetchTime()
+            setCacheTrendingList(it)
+            Observable.just(it)
+        }
     }
+
+    private fun setCacheFetchTime() = appPref.setFetchTime(setDataValidUntil())
+
+    override fun getCacheFetchTime(): String? = appPref.getFetchTime()
+
+    private fun setCacheTrendingList(data: List<Trending>) = appPref.setTrendingList(data)
+
+    override fun getCacheTrendingList(): List<Trending>? = appPref.getTrendingList()
+
 }
